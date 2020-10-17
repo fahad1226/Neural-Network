@@ -7,6 +7,15 @@ Original file is located at
     https://colab.research.google.com/drive/1IEQXavDzVE_1ju32hKQsq7BAF-jfNVhr
 """
 
+from sklearn import metrics
+from tensorflow.keras.layers import Dropout
+from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.layers import Dense
+from tensorflow.keras.models import Sequential
+from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import train_test_split
+import io
+from google.colab import files
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -18,10 +27,8 @@ from tensorflow.keras import layers
 from tensorflow.keras.layers.experimental import preprocessing
 print(tf.__version__)
 
-from google.colab import files
 uploaded = files.upload()
 
-import io
 data = pd.read_csv(io.BytesIO(uploaded['1_assignment_dataset.csv']))
 
 dataset = data.copy()
@@ -42,46 +49,39 @@ dataset.columns
 
 dataset.info()
 
-X = dataset.drop('score_number_in_exam',axis=1).values
+X = dataset.drop('score_number_in_exam', axis=1).values
 Y = dataset['score_number_in_exam'].values
 
-from sklearn.model_selection import train_test_split
 x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.2)
 
-from sklearn.preprocessing import StandardScaler
 s_scaler = StandardScaler()
 x_train = s_scaler.fit_transform(x_train.astype(np.float))
 x_test = s_scaler.transform(x_test.astype(np.float))
 
 x_train.shape
 
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense
-from tensorflow.keras.optimizers import Adam
-from tensorflow.keras.layers import Dropout
 
 model = Sequential()
-model.add(Dense(10,activation='relu'))
-model.add(Dense(5,activation='relu'))
+model.add(Dense(3, activation='relu'))
+model.add(Dense(5, activation='relu'))
 model.add(Dense(1))
 model.compile(optimizer='adam', loss='mse')
 
-model.fit(x = x_train, y = y_train, validation_data = (x_test, y_test), batch_size = 5, epochs = 50)
+model.fit(x=x_train, y=y_train, validation_data=(
+    x_test, y_test), batch_size=5, epochs=50)
 model.summary()
 
 y_pred = model.predict(x_test)
 print(y_pred)
 
-from sklearn import metrics
 
-print('MAE:', metrics.mean_absolute_error(y_test, y_pred))  
-print('MSE:', metrics.mean_squared_error(y_test, y_pred))  
+print('MAE:', metrics.mean_absolute_error(y_test, y_pred))
+print('MSE:', metrics.mean_squared_error(y_test, y_pred))
 print('RMSE:', np.sqrt(metrics.mean_squared_error(y_test, y_pred)))
 
 y_pred
 print('exam marks are: ')
 for i in y_pred:
     for j in i:
-        print(int(j), end = " ")
+        print(int(j), end=" ")
     print()
-

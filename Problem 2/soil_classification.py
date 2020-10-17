@@ -86,7 +86,7 @@ from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.layers import Dropout
 
 model = Sequential()
-model.add(Dense(10,activation='relu'))
+model.add(Dense(6,activation='relu'))
 model.add(Dense(8,activation='relu'))
 model.add(Dense(1))
 model.compile(optimizer='adam', loss='mse')
@@ -96,17 +96,17 @@ normalizer.adapt(np.array(train_features))
 
 model.compile(
     optimizer=tf.optimizers.Adam(learning_rate=0.1),
-    loss='mean_absolute_error')
+    loss='mse')
 
 # Commented out IPython magic to ensure Python compatibility.
-# %%time
-# history = model.fit(
-#     train_features, train_labels,
-#     epochs=100,
-#     # suppress logging
-#     verbose=0,
-#     # Calculate validation results on 20% of the training data
-#     validation_split = 0.2)
+#%%time
+history = model.fit(
+    train_features, train_labels,
+    epochs=100,
+    # suppress logging
+    verbose=0,
+    # Calculate validation results on 20% of the training data
+    validation_split = 0.2)
 
 def plot_loss(history):
   plt.plot(history.history['loss'], label='loss')
@@ -133,16 +133,6 @@ for i in train:
         print(f"{int(j)} --> Slit with medium compressibility (MI)", end = " ")
     print()
 
-# Commented out IPython magic to ensure Python compatibility.
-# #test our model
-# %%time
-# history = model.fit(
-#     test_features, test_labels,
-#     epochs=100,
-#     # suppress logging
-#     verbose=0,
-#     # Calculate validation results on 20% of the training data
-#     validation_split = 0.2)
 
 plot_loss(history)
 
